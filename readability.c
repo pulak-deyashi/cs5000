@@ -7,7 +7,7 @@ int main(void)
 {
     int letter = 0, word = 0, sentence = 0; //assign the variables for counting letters, words, sentences
     string text = get_string("Text: "); //get the string
-    for (int i = 0; i < strlen(text); i++) //iterate over the length of the string OR FOR EXCLUDING string.h USE i != '\0'
+    for (int i = 0; i < strlen(text); i++) //iterate over the length of the string OR FOR EXCLUDING string.h USE text[i] != '\0'
     {
         if (tolower(text[i]) >= 'a'
             && tolower(text[i]) <= 'z') //make the elements lower case AND check whether it belongs to alphabet or not
@@ -15,7 +15,7 @@ int main(void)
         {
             letter++;
         }
-        if (i == 0 || text[i - 1] == ' ') //before every word there is a space except the first word
+        if (text[i] != ' ' && (i == 0 || text[i - 1] == ' ')) //before every word there is a space except the first word
             //count for words
         {
             word++;
