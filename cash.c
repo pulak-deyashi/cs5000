@@ -38,4 +38,3 @@ int main(void)
     }
     printf("%d\n", i);    //print the number of coins needed
 }
-© 2020 GitHub, Inc.
