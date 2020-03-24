@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-
-int main(int argc, string argv[])  //take command line argument
+//take command line argument
+int main(int argc, string argv[])  
 {
-    if (argc != 2) //show |Usage: ./caesar key| message if extra arguments passed(as per problem statement)
+    //show |Usage: ./caesar key| message if extra arguments passed(as per problem statement)
+    if (argc != 2) 
     {
         printf("Usage: ./caesar key\n");
         return 1;
     }
-    else if (atol(argv[1]) == 
-             0) //if any non numeric value such as abcd/y67t/s888 passed then |string to int conv. function| such as atoi/atol/atoll returns 0
+    //if any non numeric value such as abcd/y67t/s888 passed then |string to int conv. function| such as atoi/atol/atoll returns 0
+    else if (atol(argv[1]) ==  0) 
     {
         printf("Usage: ./caesar key\n");
         return 1;
@@ -27,8 +27,8 @@ int main(int argc, string argv[])  //take command line argument
         {
             c /= 10;
         }
-        if (i != strlen(
-                argv[1]))  //here we are checking whether the num of digits in the integer is equal to the length of string value TO CHECK WHETHER PURE INTEGER VALUE PASSED OR NOT
+        //here we are checking whether the num of digits in the integer is equal to the length of string value TO CHECK WHETHER PURE INTEGER VALUE PASSED OR NOT
+        if (i != strlen(argv[1]))  
         {
             printf("Usage: ./caesar key\n");
             return 1;
