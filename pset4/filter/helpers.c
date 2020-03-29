@@ -3,12 +3,17 @@
 // Convert image to grayscale
 void grayscale(int height, int width, RGBTRIPLE image[height][width])
 {
+    int val;
+    float original_val;
     for(int i = 0; i < height; i++)
     {
         for(int j = 0; j < width; j++)
         {
-            int val = (image[i][j].rgbtBlue + image[i][j].rgbtGreen + image[i][j].rgbtRed) / 3;
-            image[i][j].rgbtBlue = image[i][j].rgbtGreen = image[i][j].rgbtRed = val;
+            original_val = (image[i][j].rgbtBlue + image[i][j].rgbtGreen + image[i][j].rgbtRed) / 3;
+            val = round(original_val);
+            image[i][j].rgbtBlue = val;
+            image[i][j].rgbtGreen = val;
+            image[i][j].rgbtRed = val;
 
 
         }
@@ -26,9 +31,9 @@ void sepia(int height, int width, RGBTRIPLE image[height][width])
             int r = image[i][j].rgbtRed;
             int g = image[i][j].rgbtGreen;
             int b = image[i][j].rgbtBlue;
-            int sr = .393 * r + .769 * g + .189 * b;
-            int sg = .349 * r + .686 * g + .168 * b;
-            int sb = .272 * r + .534 * g + .131 * b;
+            int sr = round(.393 * r + .769 * g + .189 * b);
+            int sg = round(.349 * r + .686 * g + .168 * b);
+            int sb = round(.272 * r + .534 * g + .131 * b);
             if(sr < 255) image[i][j].rgbtRed = sr;
             else image[i][j].rgbtRed = 255;
             if(sg < 255) image[i][j].rgbtGreen = sg;
@@ -85,7 +90,118 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
-
+    int i = 0, j = 0;
+    RGBTRIPLE timage[height][width];
+    for(i = 0; i < height; i++)
+    {
+        for(j = 0; j < width; j++)
+        {
+            timage[i][j].rgbtRed = image[i][j].rgbtRed;
+            timage[i][j].rgbtGreen = image[i][j].rgbtGreen;
+            timage[i][j].rgbtBlue = image[i][j].rgbtBlue;
+        }
+    }
+    i = 0;
+    j = 0;
+    int w1 = width - 1;
+    int h1 = height - 1;
+    int sumR, sumG, sumB;
+    float avgR, avgG, avgB;
+    sumR = timage[i+1][j].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j+1].rgbtRed + timage[i][j+1].rgbtRed;
+    sumG = timage[i+1][j].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen;
+    sumB = timage[i+1][j].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue;
+    avgR = sumR / 4;
+    avgG = sumG / 4;
+    avgB = sumB / 4;
+    image[i][j].rgbtRed = (int)round(avgR);
+    image[i][j].rgbtGreen = (int)round(avgG);
+    image[i][j].rgbtBlue = (int)round(avgB);
+    for(j = 1; j < w1; j++)
+    {
+        sumR = timage[i+1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j+1].rgbtRed + timage[i][j+1].rgbtRed;
+        sumG = timage[i+1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i+1][j].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen;
+        sumB = timage[i+1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i+1][j].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue;
+        avgR = sumR / 6;
+        avgG = sumG / 6;
+        avgB = sumB / 6;
+        image[i][j].rgbtRed = (int)round(avgR);
+        image[i][j].rgbtGreen = (int)round(avgG);
+        image[i][j].rgbtBlue = (int)round(avgB);
+    }
+    sumR = timage[i+1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j].rgbtRed + timage[i][j].rgbtRed;
+    sumG = timage[i+1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i+1][j].rgbtGreen + timage[i][j].rgbtGreen;
+    sumB = timage[i+1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i+1][j].rgbtBlue + timage[i][j].rgbtBlue;
+    avgR = sumR / 4;
+    avgG = sumG / 4;
+    avgB = sumB / 4;
+    image[i][j].rgbtRed = (int)round(avgR);
+    image[i][j].rgbtGreen = (int)round(avgG);
+    image[i][j].rgbtBlue = (int)round(avgB);
+    for(i = 1; i < h1; i++)
+    {
+        j = 0;
+        sumR = timage[i-1][j+1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j+1].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j+1].rgbtRed + timage[i+1][j].rgbtRed;
+        sumG = timage[i-1][j+1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j+1].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j+1].rgbtGreen + timage[i+1][j].rgbtGreen;
+        sumB = timage[i-1][j+1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j+1].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j+1].rgbtBlue + timage[i+1][j].rgbtBlue;
+        avgR = sumR / 6;
+        avgG = sumG / 6;
+        avgB = sumB / 6;
+        image[i][j].rgbtRed = (int)round(avgR);
+        image[i][j].rgbtGreen = (int)round(avgG);
+        image[i][j].rgbtBlue = (int)round(avgB);
+        for(j = 1; j < w1; j++)
+        {
+            sumR = timage[i-1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j].rgbtRed + timage[i-1][j+1].rgbtRed + timage[i][j+1].rgbtRed + timage[i+1][j+1].rgbtRed;
+            sumG = timage[i-1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i+1][j-1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j].rgbtGreen + timage[i-1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen + timage[i+1][j+1].rgbtGreen;
+            sumB = timage[i-1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i+1][j-1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j].rgbtBlue + timage[i-1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue + timage[i+1][j+1].rgbtBlue;
+            avgR = sumR / 9;
+            avgG = sumG / 9;
+            avgB = sumB / 9;
+            image[i][j].rgbtRed = (int)round(avgR);
+            image[i][j].rgbtGreen = (int)round(avgG);
+            image[i][j].rgbtBlue = (int)round(avgB);
+        }
+        sumR = timage[i-1][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j-1].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j-1].rgbtRed + timage[i+1][j].rgbtRed;
+        sumG = timage[i-1][j-1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j-1].rgbtGreen + timage[i+1][j].rgbtGreen;
+        sumB = timage[i-1][j-1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j-1].rgbtBlue + timage[i+1][j].rgbtBlue;
+        avgR = sumR / 6;
+        avgG = sumG / 6;
+        avgB = sumB / 6;
+        image[i][j].rgbtRed = (int)round(avgR);
+        image[i][j].rgbtGreen = (int)round(avgG);
+        image[i][j].rgbtBlue = (int)round(avgB);
+    }
+    j = 0;
+    sumR = timage[i-1][j+1].rgbtRed + timage[i][j+1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j].rgbtRed;
+    sumG = timage[i-1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j].rgbtGreen;
+    sumB = timage[i-1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j].rgbtBlue;
+    avgR = sumR / 4;
+    avgG = sumG / 4;
+    avgB = sumB / 4;
+    image[i][j].rgbtRed = (int)round(avgR);
+    image[i][j].rgbtGreen = (int)round(avgG);
+    image[i][j].rgbtBlue = (int)round(avgB);
+    for(j = 1; j < w1; j++)
+    {
+        sumR = timage[h1-1][j-1].rgbtRed + timage[h1][j-1].rgbtRed + timage[h1-1][j].rgbtRed + timage[h1][j].rgbtRed + timage[h1-1][j+1].rgbtRed + timage[h1][j+1].rgbtRed;
+        sumG = timage[h1-1][j-1].rgbtGreen + timage[h1][j-1].rgbtGreen + timage[h1-1][j].rgbtGreen + timage[h1][j].rgbtGreen + timage[h1-1][j+1].rgbtGreen + timage[h1][j+1].rgbtGreen;
+        sumB = timage[h1-1][j-1].rgbtBlue + timage[h1][j-1].rgbtBlue + timage[h1-1][j].rgbtBlue + timage[h1][j].rgbtBlue + timage[h1-1][j+1].rgbtBlue + timage[h1][j+1].rgbtBlue;
+        avgR = sumR / 6;
+        avgG = sumG / 6;
+        avgB = sumB / 6;
+        image[h1][j].rgbtRed = (int)round(avgR);
+        image[h1][j].rgbtGreen = (int)round(avgG);
+        image[h1][j].rgbtBlue = (int)round(avgB);
+    }
+    sumR = timage[i-1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j].rgbtRed;
+    sumG = timage[i-1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j].rgbtGreen;
+    sumB = timage[i-1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j].rgbtBlue;
+    avgR = sumR / 4;
+    avgG = sumG / 4;
+    avgB = sumB / 4;
+    image[i][j].rgbtRed = (int)round(avgR);
+    image[i][j].rgbtGreen = (int)round(avgG);
+    image[i][j].rgbtBlue = (int)round(avgB);
     return;
 }
 
