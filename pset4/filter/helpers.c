@@ -99,6 +99,7 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
 {
     ////here we are going to use "box blur" method
     int i = 0, j = 0;
+    int k, l;
     //created a temprary image variable of type RGBTRIPLE
     RGBTRIPLE timage[height][width];
     //copying the values of image variable in temporary image variable
@@ -132,17 +133,28 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     image[i][j].rgbtGreen = avgG;
     image[i][j].rgbtBlue = avgB;
     //code for upper EDGE pixelS, each bounded by 5 indivisual pixels
+    sumR = sumG = sumB = 0;
     for(j = 1; j < w1; j++)
     {
-        sumR = timage[i+1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j+1].rgbtRed + timage[i][j+1].rgbtRed;
-        sumG = timage[i+1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i+1][j].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen;
-        sumB = timage[i+1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i+1][j].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue;
+        for(k = i; k <= i+1; k++)
+        {
+                for(l = j-1; l <= j+1; l++)
+            {
+                sumR += timage[k][l].rgbtRed;
+                sumG += timage[k][l].rgbtGreen;
+                sumB += timage[k][l].rgbtBlue;
+            }
+        }
+        //sumR = timage[i+1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j+1].rgbtRed + timage[i][j+1].rgbtRed;
+        //sumG = timage[i+1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i+1][j].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen;
+        //sumB = timage[i+1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i+1][j].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue;
         avgR = round((float)sumR / 6);
         avgG = round((float)sumG / 6);
         avgB = round((float)sumB / 6);
         image[i][j].rgbtRed = avgR;
         image[i][j].rgbtGreen = avgG;
         image[i][j].rgbtBlue = avgB;
+        sumR = sumG = sumB = 0;
     }
     //code for upper-right CORNER pixel, bounded by 3 indivisual pixels
     sumR = timage[i+1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j].rgbtRed + timage[i][j].rgbtRed;
@@ -155,42 +167,73 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     image[i][j].rgbtGreen = avgG;
     image[i][j].rgbtBlue = avgB;
     //code for all-MIDDLE pixels
+    sumR = sumG = sumB = 0;
     for(i = 1; i < h1; i++)
     {
         j = 0;
         //code for right EDGE pixelS, each bounded by 5 indivisual pixels
-        sumR = timage[i-1][j+1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j+1].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j+1].rgbtRed + timage[i+1][j].rgbtRed;
-        sumG = timage[i-1][j+1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j+1].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j+1].rgbtGreen + timage[i+1][j].rgbtGreen;
-        sumB = timage[i-1][j+1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j+1].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j+1].rgbtBlue + timage[i+1][j].rgbtBlue;
+        for(k = i-1; k <= i+1; k++)
+        {
+                for(l = j; l <= j+1; l++)
+            {
+                sumR += timage[k][l].rgbtRed;
+                sumG += timage[k][l].rgbtGreen;
+                sumB += timage[k][l].rgbtBlue;
+            }
+        }
+        //sumR = timage[i-1][j+1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j+1].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j+1].rgbtRed + timage[i+1][j].rgbtRed;
+        //sumG = timage[i-1][j+1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j+1].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j+1].rgbtGreen + timage[i+1][j].rgbtGreen;
+        //sumB = timage[i-1][j+1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j+1].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j+1].rgbtBlue + timage[i+1][j].rgbtBlue;
         avgR = round((float)sumR / 6);
         avgG = round((float)sumG / 6);
         avgB = round((float)sumB / 6);
         image[i][j].rgbtRed = avgR;
         image[i][j].rgbtGreen = avgG;
         image[i][j].rgbtBlue = avgB;
+        sumR = sumG = sumB = 0;
         //code for MIDDLE pixels, each bounded by 8 indivisual pixels
         for(j = 1; j < w1; j++)
         {
-            sumR = timage[i-1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j].rgbtRed + timage[i-1][j+1].rgbtRed + timage[i][j+1].rgbtRed + timage[i+1][j+1].rgbtRed;
-            sumG = timage[i-1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i+1][j-1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j].rgbtGreen + timage[i-1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen + timage[i+1][j+1].rgbtGreen;
-            sumB = timage[i-1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i+1][j-1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j].rgbtBlue + timage[i-1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue + timage[i+1][j+1].rgbtBlue;
+            for(k = i-1; k <= i+1; k++)
+            {
+                for(l = j-1; l <= j+1; l++)
+                {
+                    sumR += timage[k][l].rgbtRed;
+                    sumG += timage[k][l].rgbtGreen;
+                    sumB += timage[k][l].rgbtBlue;
+                }
+            }
+            //sumR = timage[i-1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i+1][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j].rgbtRed + timage[i-1][j+1].rgbtRed + timage[i][j+1].rgbtRed + timage[i+1][j+1].rgbtRed;
+            //sumG = timage[i-1][j-1].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i+1][j-1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j].rgbtGreen + timage[i-1][j+1].rgbtGreen + timage[i][j+1].rgbtGreen + timage[i+1][j+1].rgbtGreen;
+            //sumB = timage[i-1][j-1].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i+1][j-1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j].rgbtBlue + timage[i-1][j+1].rgbtBlue + timage[i][j+1].rgbtBlue + timage[i+1][j+1].rgbtBlue;
             avgR = round((float)sumR / 9);
             avgG = round((float)sumG / 9);
             avgB = round((float)sumB / 9);
             image[i][j].rgbtRed = avgR;
             image[i][j].rgbtGreen = avgG;
             image[i][j].rgbtBlue = avgB;
+            sumR = sumG = sumB = 0;
         }
         //code for left CORNER pixelS, each bounded by 5 indivisual pixels
-        sumR = timage[i-1][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j-1].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j-1].rgbtRed + timage[i+1][j].rgbtRed;
-        sumG = timage[i-1][j-1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j-1].rgbtGreen + timage[i+1][j].rgbtGreen;
-        sumB = timage[i-1][j-1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j-1].rgbtBlue + timage[i+1][j].rgbtBlue;
+        for(k = i-1; k <= i+1; k++)
+        {
+                for(l = j-1; l <= j; l++)
+            {
+                sumR += timage[k][l].rgbtRed;
+                sumG += timage[k][l].rgbtGreen;
+                sumB += timage[k][l].rgbtBlue;
+            }
+        }
+        //sumR = timage[i-1][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j-1].rgbtRed + timage[i][j].rgbtRed + timage[i+1][j-1].rgbtRed + timage[i+1][j].rgbtRed;
+        //sumG = timage[i-1][j-1].rgbtGreen + timage[i-1][j].rgbtGreen + timage[i][j-1].rgbtGreen + timage[i][j].rgbtGreen + timage[i+1][j-1].rgbtGreen + timage[i+1][j].rgbtGreen;
+        //sumB = timage[i-1][j-1].rgbtBlue + timage[i-1][j].rgbtBlue + timage[i][j-1].rgbtBlue + timage[i][j].rgbtBlue + timage[i+1][j-1].rgbtBlue + timage[i+1][j].rgbtBlue;
         avgR = round((float)sumR / 6);
         avgG = round((float)sumG / 6);
         avgB = round((float)sumB / 6);
         image[i][j].rgbtRed = avgR;
         image[i][j].rgbtGreen = avgG;
         image[i][j].rgbtBlue = avgB;
+        sumR = sumG = sumB = 0;
     }
     j = 0;
     //code for lower-left CORNER pixel, bounded by 3 indivisual pixels
@@ -204,17 +247,28 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
     image[i][j].rgbtGreen = avgG;
     image[i][j].rgbtBlue = avgB;
     //code for lower EDGE pixelS, each bounded by 5 indivisual pixels
+    sumR = sumG = sumB = 0;
     for(j = 1; j < w1; j++)
     {
-        sumR = timage[h1-1][j-1].rgbtRed + timage[h1][j-1].rgbtRed + timage[h1-1][j].rgbtRed + timage[h1][j].rgbtRed + timage[h1-1][j+1].rgbtRed + timage[h1][j+1].rgbtRed;
-        sumG = timage[h1-1][j-1].rgbtGreen + timage[h1][j-1].rgbtGreen + timage[h1-1][j].rgbtGreen + timage[h1][j].rgbtGreen + timage[h1-1][j+1].rgbtGreen + timage[h1][j+1].rgbtGreen;
-        sumB = timage[h1-1][j-1].rgbtBlue + timage[h1][j-1].rgbtBlue + timage[h1-1][j].rgbtBlue + timage[h1][j].rgbtBlue + timage[h1-1][j+1].rgbtBlue + timage[h1][j+1].rgbtBlue;
+        for(k = h1-1; k <= h1; k++)
+        {
+                for(l = j-1; l <= j+1; l++)
+            {
+                sumR += timage[k][l].rgbtRed;
+                sumG += timage[k][l].rgbtGreen;
+                sumB += timage[k][l].rgbtBlue;
+            }
+        }
+        //sumR = timage[h1-1][j-1].rgbtRed + timage[h1][j-1].rgbtRed + timage[h1-1][j].rgbtRed + timage[h1][j].rgbtRed + timage[h1-1][j+1].rgbtRed + timage[h1][j+1].rgbtRed;
+        //sumG = timage[h1-1][j-1].rgbtGreen + timage[h1][j-1].rgbtGreen + timage[h1-1][j].rgbtGreen + timage[h1][j].rgbtGreen + timage[h1-1][j+1].rgbtGreen + timage[h1][j+1].rgbtGreen;
+        //sumB = timage[h1-1][j-1].rgbtBlue + timage[h1][j-1].rgbtBlue + timage[h1-1][j].rgbtBlue + timage[h1][j].rgbtBlue + timage[h1-1][j+1].rgbtBlue + timage[h1][j+1].rgbtBlue;
         avgR = round((float)sumR / 6);
         avgG = round((float)sumG / 6);
         avgB = round((float)sumB / 6);
         image[h1][j].rgbtRed = avgR;
         image[h1][j].rgbtGreen = avgG;
         image[h1][j].rgbtBlue = avgB;
+        sumR = sumG = sumB = 0;
     }
     //code for lower-right CORNER pixel, bounded by 3 indivisual pixels
     sumR = timage[i-1][j-1].rgbtRed + timage[i][j-1].rgbtRed + timage[i-1][j].rgbtRed + timage[i][j].rgbtRed;
