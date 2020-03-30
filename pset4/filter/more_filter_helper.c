@@ -225,7 +225,7 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
 {
     //temporary image file
     RGBTRIPLE timage[height][width];
-    int i, j, k, l;
+    int i=0, j=0, k=0, l=0;
     for(i = 0; i < height; i++)
     {
         for(j = 0; j < width; j++)
@@ -235,17 +235,13 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
             timage[i][j].rgbtBlue = image[i][j].rgbtBlue;
         }
     }
-    int gxm[3][3];
-    int gym[3][3];
+    int gxm[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    int gym[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
     int x = 0, y = 0;
-    int sumRx = 0, sumGx = 0, sumBx = 0;
-    int sumRy = 0, sumGy = 0, sumBy = 0;
+    long sumRx = 0, sumGx = 0, sumBx = 0;
+    long sumRy = 0, sumGy = 0, sumBy = 0;
     int sqroot = 0;
-    gxm[0][0] = gxm[0][2] = gym[0][0] = gym[0][2] = -1;
-    gxm[1][0] = gym[0][1] = -2;
-    gxm[0][1] = gxm[1][1] = gxm[2][1] = gym[1][0] = gym[1][1] = gym[1][2] = 0;
-    gxm[1][2] = gym[2][1] = 2;
-    gxm[0][2] = gxm[2][2] = gym[2][0] = gym[2][2] = 1;
+
     //making i and j of value 0, 0 for next steps
     i = 0;
     j = 0;
@@ -253,6 +249,8 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
     int w1 = width - 1;
     int h1 = height - 1;
     //code for upper-left CORNER pixel, bounded by 3 indivisual pixels
+    sumRx = sumGx = sumBx = 0;
+    sumRy = sumGy = sumBy = 0;
     x = 1; y = 1;
     for(i = 0; i < 2; i++)
     {
@@ -269,21 +267,21 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
         x++;
         y = 1;
     }
-    sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+    sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
     if(sqroot > 255) image[i][j].rgbtRed = 255;
     else image[i][j].rgbtRed = sqroot;
-    sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+    sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
     if(sqroot > 255) image[i][j].rgbtGreen = 255;
     else image[i][j].rgbtGreen = sqroot;
-    sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+    sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
     if(sqroot > 255) image[i][j].rgbtBlue = 255;
     else image[i][j].rgbtBlue = sqroot;
-    sumRx = sumGx = sumBx = 0;
-    sumRy = sumGy = sumBy = 0;
     //code for upper EDGE pixelS, each bounded by 5 indivisual pixels
-    x = 1; y = 0;
     for(j = 1; j < w1; j++)
     {
+        sumRx = sumGx = sumBx = 0;
+        sumRy = sumGy = sumBy = 0;
+        x = 1; y = 0;
         for(k = i; k <= i+1; k++)
         {
             for(l = j-1; l <= j+1; l++)
@@ -298,20 +296,20 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
             }
             x++;
             y = 0;
-        }
-        sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+        }sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
         if(sqroot > 255) image[i][j].rgbtRed = 255;
         else image[i][j].rgbtRed = sqroot;
-        sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+        sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
         if(sqroot > 255) image[i][j].rgbtGreen = 255;
         else image[i][j].rgbtGreen = sqroot;
-        sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+        sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
         if(sqroot > 255) image[i][j].rgbtBlue = 255;
         else image[i][j].rgbtBlue = sqroot;
-        sumRx = sumGx = sumBx = 0;
-        sumRy = sumGy = sumBy = 0;
+
     }
     //code for upper-right CORNER pixel, bounded by 3 indivisual pixels
+    sumRx = 0; sumGx = 0; sumBx = 0;
+    sumRy = 0; sumGy = 0; sumBy = 0;
     x = 1; y = 0;
     for(k = i; k <= i+1; k++)
     {
@@ -328,22 +326,22 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
         x++;
         y = 0;
     }
-    sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+    sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
     if(sqroot > 255) image[i][j].rgbtRed = 255;
     else image[i][j].rgbtRed = sqroot;
-    sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+    sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
     if(sqroot > 255) image[i][j].rgbtGreen = 255;
     else image[i][j].rgbtGreen = sqroot;
-    sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+    sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
     if(sqroot > 255) image[i][j].rgbtBlue = 255;
     else image[i][j].rgbtBlue = sqroot;
-    sumRx = sumGx = sumBx = 0;
-    sumRy = sumGy = sumBy = 0;
     //code for all-MIDDLE pixels
     for(i = 1; i < h1; i++)
     {
         j = 0;
-        //code for right EDGE pixelS, each bounded by 5 indivisual pixels
+        //code for left EDGE pixelS, each bounded by 5 indivisual pixels
+        sumRx = 0; sumGx = 0; sumBx = 0;
+        sumRy = 0; sumGy = 0; sumBy = 0;
         x = 0; y = 1;
         for(k = i-1; k <= i+1; k++)
         {
@@ -360,49 +358,49 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
             x++;
             y = 1;
         }
-        sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+        sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
         if(sqroot > 255) image[i][j].rgbtRed = 255;
         else image[i][j].rgbtRed = sqroot;
-        sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+        sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
         if(sqroot > 255) image[i][j].rgbtGreen = 255;
         else image[i][j].rgbtGreen = sqroot;
-        sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+        sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
         if(sqroot > 255) image[i][j].rgbtBlue = 255;
         else image[i][j].rgbtBlue = sqroot;
-        sumRx = sumGx = sumBx = 0;
-        sumRy = sumGy = sumBy = 0;
         //code for MIDDLE pixels, each bounded by 8 indivisual pixels
-        x = 0; y = 0;
         for(j = 1; j < w1; j++)
         {
+            sumRx = 0; sumGx = 0; sumBx = 0;
+            sumRy = 0; sumGy = 0; sumBy = 0;
+            x = 0; y = 0;
             for(k = i-1; k <= i+1; k++)
             {
                 for(l = j-1; l <= j+1; l++)
                 {
-                    sumRx += timage[k][l].rgbtRed * gxm[x][y];
-                    sumRy += timage[k][l].rgbtRed * gym[x][y];
-                    sumGx += timage[k][l].rgbtGreen * gxm[x][y];
-                    sumGy += timage[k][l].rgbtGreen * gym[x][y];
-                    sumBx += timage[k][l].rgbtBlue * gxm[x][y];
-                    sumBy += timage[k][l].rgbtBlue * gym[x][y];
+                    sumRx += (timage[k][l].rgbtRed * gxm[x][y]);
+                    sumRy += (timage[k][l].rgbtRed * gym[x][y]);
+                    sumGx += (timage[k][l].rgbtGreen * gxm[x][y]);
+                    sumGy += (timage[k][l].rgbtGreen * gym[x][y]);
+                    sumBx += (timage[k][l].rgbtBlue * gxm[x][y]);
+                    sumBy += (timage[k][l].rgbtBlue * gym[x][y]);
                     y++;
                 }
                 x++;
                 y = 0;
             }
-            sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+            sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
             if(sqroot > 255) image[i][j].rgbtRed = 255;
             else image[i][j].rgbtRed = sqroot;
-            sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+            sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
             if(sqroot > 255) image[i][j].rgbtGreen = 255;
             else image[i][j].rgbtGreen = sqroot;
-            sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+            sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
             if(sqroot > 255) image[i][j].rgbtBlue = 255;
             else image[i][j].rgbtBlue = sqroot;
-            sumRx = sumGx = sumBx = 0;
-            sumRy = sumGy = sumBy = 0;
         }
-        //code for left EDGE pixelS, each bounded by 5 indivisual pixels
+        //code for right EDGE pixelS, each bounded by 5 indivisual pixels
+        sumRx = 0; sumGx = 0; sumBx = 0;
+        sumRy = 0; sumGy = 0; sumBy = 0;
         x = 0; y = 0;
         for(k = i-1; k <= i+1; k++)
         {
@@ -419,20 +417,20 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
             x++;
             y = 0;
         }
-        sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+        sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
         if(sqroot > 255) image[i][j].rgbtRed = 255;
         else image[i][j].rgbtRed = sqroot;
-        sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+        sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
         if(sqroot > 255) image[i][j].rgbtGreen = 255;
         else image[i][j].rgbtGreen = sqroot;
-        sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+        sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
         if(sqroot > 255) image[i][j].rgbtBlue = 255;
         else image[i][j].rgbtBlue = sqroot;
-        sumRx = sumGx = sumBx = 0;
-        sumRy = sumGy = sumBy = 0;
     }
     j = 0;
     //code for lower-left CORNER pixel, bounded by 3 indivisual pixels
+    sumRx = 0; sumGx = 0; sumBx = 0;
+    sumRy = 0; sumGy = 0; sumBy = 0;
     x = 0; y = 1;
     for(k = i-1; k <= i; k++)
     {
@@ -449,21 +447,21 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
         x++;
         y = 1;
     }
-    sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+    sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
     if(sqroot > 255) image[i][j].rgbtRed = 255;
     else image[i][j].rgbtRed = sqroot;
-    sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+    sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
     if(sqroot > 255) image[i][j].rgbtGreen = 255;
     else image[i][j].rgbtGreen = sqroot;
-    sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+    sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
     if(sqroot > 255) image[i][j].rgbtBlue = 255;
     else image[i][j].rgbtBlue = sqroot;
-    sumRx = sumGx = sumBx = 0;
-    sumRy = sumGy = sumBy = 0;
     //code for lower EDGE pixelS, each bounded by 5 indivisual pixels
-    x = 0; y = 0;
     for(j = 1; j < w1; j++)
     {
+        sumRx = 0; sumGx = 0; sumBx = 0;
+        sumRy = 0; sumGy = 0; sumBy = 0;
+        x = 0; y = 0;
         for(k = h1-1; k <= h1; k++)
         {
                 for(l = j-1; l <= j+1; l++)
@@ -478,20 +476,18 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
             }
             x++;
             y = 0;
-        }
-        sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+        }sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
         if(sqroot > 255) image[i][j].rgbtRed = 255;
         else image[i][j].rgbtRed = sqroot;
-        sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+        sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
         if(sqroot > 255) image[i][j].rgbtGreen = 255;
         else image[i][j].rgbtGreen = sqroot;
-        sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+        sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
         if(sqroot > 255) image[i][j].rgbtBlue = 255;
         else image[i][j].rgbtBlue = sqroot;
-        sumRx = sumGx = sumBx = 0;
-        sumRy = sumGy = sumBy = 0;
     }
-    //code for lower-right CORNER pixel, bounded by 3 indivisual pixels
+    sumRx = 0; sumGx = 0; sumBx = 0;
+    sumRy = 0; sumGy = 0; sumBy = 0;
     x = 0; y = 0;
     for(k = i-1; k <= i; k++)
     {
@@ -508,14 +504,99 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
         x++;
         y = 0;
     }
-    sqroot = round(sqrt((float)(sumRx*sumRx) + (float)(sumRy*sumRy)));
+    sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
     if(sqroot > 255) image[i][j].rgbtRed = 255;
     else image[i][j].rgbtRed = sqroot;
-    sqroot = round(sqrt((float)(sumGx*sumGx) + (float)(sumGy*sumGy)));
+    sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
     if(sqroot > 255) image[i][j].rgbtGreen = 255;
     else image[i][j].rgbtGreen = sqroot;
-    sqroot = round(sqrt((float)(sumBx*sumBx) + (float)(sumBy*sumBy)));
+    sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
     if(sqroot > 255) image[i][j].rgbtBlue = 255;
     else image[i][j].rgbtBlue = sqroot;
     return;
 }
+/*void edges(int height, int width, RGBTRIPLE image[height][width])
+{
+    //temporary image file
+    int h1 = height+2; int w1 = width+2;
+    //temporary image file
+    RGBTRIPLE timage[h1][w1];
+    int i, j, k, l, x, y;
+    //inserting zeros to the extra border(upper, lower) pixels
+    for(i = 0; i < h1; i += h1-1)
+    {
+        for(j = 0; j < w1; j++)
+        {
+            timage[i][j].rgbtRed = 0;
+            timage[i][j].rgbtGreen = 0;
+            timage[i][j].rgbtBlue = 0;
+        }
+    }
+    //inserting zeros to the extra border(left, right) pixels
+    for(i = 1; i <= height; i++)
+    {
+        for(j = 0; j < w1; j += w1-1)
+        {
+            timage[i][j].rgbtRed = 0;
+            timage[i][j].rgbtGreen = 0;
+            timage[i][j].rgbtBlue = 0;
+        }
+    }
+    //copying the image inside temp image file
+    for(i = 0; i < height; i++)
+    {
+        for(j = 0; j < width; j++)
+        {
+            timage[i+1][j+1].rgbtRed = image[i][j].rgbtRed;
+            timage[i+1][j+1].rgbtGreen = image[i][j].rgbtGreen;
+            timage[i+1][j+1].rgbtBlue = image[i][j].rgbtBlue;
+        }
+    }
+    //variable for storing the value of square root
+    int sqroot;
+    //values of x and y kernals
+    int gxm[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    int gym[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
+    //sum variables
+    int sumRx, sumGx, sumBx;
+    int sumRy, sumGy, sumBy;
+    //iterating over the height and width of given pixel
+    for(i = 0; i < height; i++)
+    {
+        for(j = 0; j < width; j++)
+        {
+            //initializing sum as zero for every new step
+            sumRx = 0; sumGx = 0; sumBx = 0;
+            sumRy = 0; sumGy = 0; sumBy = 0;
+            //x, y = 0 for indexing gxm, gym
+            x = 0; y = 0;
+            for(k = i-1; k <= i+1; k++)
+            {
+                for(l = j-1; l <= j+1; l++)
+                {
+                    sumRx += (timage[k+1][l+1].rgbtRed * gxm[x][y]);
+                    sumRy += (timage[k+1][l+1].rgbtRed * gym[x][y]);
+                    sumGx += (timage[k+1][l+1].rgbtGreen * gxm[x][y]);
+                    sumGy += (timage[k+1][l+1].rgbtGreen * gym[x][y]);
+                    sumBx += (timage[k+1][l+1].rgbtBlue * gxm[x][y]);
+                    sumBy += (timage[k+1][l+1].rgbtBlue * gym[x][y]);
+                    y++;
+                }
+                x++;
+                y = 0;
+            }
+            //inserting corrosponding value
+            sqroot = round(sqrt((sumRx*sumRx) + (sumRy*sumRy)));
+            if(sqroot > 255) image[i][j].rgbtRed = 255;
+            else image[i][j].rgbtRed = sqroot;
+            sqroot = round(sqrt((sumGx*sumGx) + (sumGy*sumGy)));
+            if(sqroot > 255) image[i][j].rgbtGreen = 255;
+            else image[i][j].rgbtGreen = sqroot;
+            sqroot = round(sqrt((sumBx*sumBx) + (sumBy*sumBy)));
+            if(sqroot > 255) image[i][j].rgbtBlue = 255;
+            else image[i][j].rgbtBlue = sqroot;
+        }
+    }
+
+    return;
+}*/
