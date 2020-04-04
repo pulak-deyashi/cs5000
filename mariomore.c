@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    int n, i, j, c;
+    int n, i, c;
     do
     {
         n = get_int("Height: ");    //Get the height from the user
