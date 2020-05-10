@@ -20,11 +20,12 @@ def function(argv):
     # iterate 
     for i in range(1, len(header)):
         tr = header[i]
+        length = len(tr)
         str_dict[tr] = []
         for j in range(len(txt)):
-            while txt[j: j+len(tr)] == tr:
+            while txt[j: j+length] == tr:
                 count = count + 1
-                j = j+len(tr)
+                j = j+length
             # append
             str_dict[tr].append(count)
             count = 0
